@@ -2,23 +2,23 @@ const Block = require("./Block");
 
 class Blockchain {
 	constructor() {
-		const genesisBlock = new Block("Genesis block");
-		this.chain = [genesisBlock];
+		this.chain = [new Block()];
 	}
 
-	getLatestBlock() {
-		return this.chain[this.chain.length - 1];
+	addBlock(block) {
+		block.previousHash = this.chain[this.chain.length - 1].toHash();
+		this.chain.push(block);
 	}
 
-	addBlock(data) {
-		// Get the hash of the previous block
-		const previousHash = this.getLatestBlock().hash;
-
-		// Create a new block with the previous block's hash
-		const newBlock = new Block(data, previousHash);
-
-		// Add the new block to the chain
-		this.chain.push(newBlock);
+	isValid() {
+		for (let i = this.chain.length - 1; i > 0; i--) {
+			const block = this.chain[i];
+			const prev = this.chain[i - 1];
+			if (block.previousHash.toString() !== prev.toHash().toString()) {
+				return false;
+			}
+		}
+		return true;
 	}
 }
 
