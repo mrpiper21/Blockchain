@@ -6,9 +6,13 @@ const PRIVATE_KEY =
 
 async function signMessage(msg) {
 	const hash = hashMessage(msg);
-	return secp.sign(hash, PRIVATE_KEY, {
+
+	const sig = secp.sign(hash, PRIVATE_KEY, {
 		recovered: true,
 	});
+
+	console.log("signature ====", sig);
+	return sig;
 }
 
 module.exports = signMessage;
